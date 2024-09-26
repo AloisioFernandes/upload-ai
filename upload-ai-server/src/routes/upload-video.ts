@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import { pipeline } from "node:stream";
 import { promisify } from "node:util";
+import { prisma } from "../lib/prisma";
 
 const pump = promisify(pipeline);
 
@@ -24,7 +25,7 @@ export async function uploadVideoRoute(app: FastifyInstance) {
 
     const extension = path.extname(data.filename);
 
-    if (extension !== "mp3") {
+    if (extension !== ".mp3") {
       return reply
         .status(400)
         .send({ error: "Invalid input type, please upload a MP3." });
@@ -40,5 +41,14 @@ export async function uploadVideoRoute(app: FastifyInstance) {
     );
 
     await pump(data.file, fs.createWriteStream(uploadDestination));
+
+    const video = await prisma.video.create({
+      data: {
+        name: data.filename,
+        path: uploadDestination,
+      },
+    });
+
+    return { video };
   });
 }

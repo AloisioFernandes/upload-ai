@@ -13,3 +13,13 @@ Content-Type: audio/mpeg
 
 < ./example.mp3
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# @name create-transcription
+POST http://localhost:3333/videos/8430cfd0-65bb-45a6-9d81-a74b34b523f3/transcription
+Content-Type: application/json
+
+{
+  "prompt": "song"
+}
