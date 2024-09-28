@@ -11,16 +11,28 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 Content-Disposition: form-data; name="file"; filename="example.mp3"
 Content-Type: audio/mpeg
 
-< ./example.mp3
+< ./test.mp3
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###
 
 # @name create-transcription
-POST http://localhost:3333/videos/8d6b123d-710c-4f3b-a026-ee74d5888a97/transcription
+POST http://localhost:3333/videos/da6e7df9-f89d-4a9b-9409-69409bb175a5/transcription
 Content-Type: application/json
 
 {
   "prompt": "song"
 }
-// 01:05:35
+
+###
+
+# @name generate-ai-completion
+POST http://localhost:3333/ai/complete
+Content-Type: application/json
+
+{
+  "videoId": "8d6b123d-710c-4f3b-a026-ee74d5888a97",
+  "temperature": 0.5,
+  "template": "Gere um resumo sucinto da transcrição a seguir: '''{transcription}'''"
+}
+ 
