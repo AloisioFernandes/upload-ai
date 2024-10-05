@@ -4,6 +4,8 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { ChangeEvent, FormEvent, useMemo, useRef, useState } from "react";
+import { getFFmpeg } from "@/lib/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
 
 export function VideoInputForm() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -21,6 +23,18 @@ export function VideoInputForm() {
     setVideoFile(selectedFile);
   }
 
+  async function convertVideoToAudio(video: File) {
+    const ffmpeg = await getFFmpeg();
+
+    await ffmpeg.writeFile("input.mp4", await fetchFile(video));
+
+    ffmpeg.on("progress", (progress) => {
+      console.log("Convert progress: " + Math.round(progress.progress * 100));
+    });
+
+    await ffmpeg.exec(["-1", "input.mp4", "-b:a", "20k", "output.mp3"]);
+  }
+
   function handleUploadVideo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -29,8 +43,6 @@ export function VideoInputForm() {
     if (!videoFile) {
       return;
     }
-
-    
   }
 
   const previewURL = useMemo(() => {
