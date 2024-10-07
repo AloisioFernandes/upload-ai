@@ -147,9 +147,20 @@ export function VideoInputForm() {
         />
       </div>
 
-      <Button disabled={status !== "waiting"} type="submit" className="w-full">
-        Carregar video
-        <Upload className="w-4 h-4 ml-2" />
+      <Button
+        data-success={status === "success"}
+        disabled={status !== "waiting"}
+        type="submit"
+        className="w-full data-[success=true]:bg-emerald-400"
+      >
+        {status === "waiting" ? (
+          <>
+            Carregar video
+            <Upload className="w-4 h-4 ml-2" />
+          </>
+        ) : (
+          statusMessages[status]
+        )}
       </Button>
     </form>
   );
